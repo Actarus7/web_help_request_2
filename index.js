@@ -82,7 +82,6 @@ app.post('/api/post', async (req, res) => {
     try {
         const data = await client.query('INSERT INTO tickets (message, user_id) VALUES ($1, $2) RETURNING *', [message, user_id])
         if ((message && user_id) && (data.rowCount > 0)) {
-            console.log('201')
             res.status(201).json({
                 status: "SUCCESS",
                 message: "Ticket Posted !",
@@ -90,7 +89,6 @@ app.post('/api/post', async (req, res) => {
             })
         }
         else {
-            console.log('Try/Else')
             res.status(400).json({
                 status: 'FAIL',
                 message: "Contenu du message vide - Exemple ''",
@@ -133,7 +131,7 @@ app.post('/api/post', async (req, res) => {
             res.status(400).json
                 ({
                     status: 'FAIL',
-                    message: "User_id inconnu - Philippe tu ne peux pas poster de message :D",
+                    message: "User_id inconnu - Philippe tu n'es pas habilité à poster des messages :D",
                     data: null
                 })
         }
@@ -192,6 +190,11 @@ app.put('/api/update', async (req, res) => {
         }
         catch (err){
             console.log(err.stack);
+            res.status(500).json({
+                status: 'FAIL',
+                message: "Erreur serveur ou inconnue",
+                data: null
+            })
         }
     }
 })
